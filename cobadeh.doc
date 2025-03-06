@@ -1,0 +1,390 @@
+mysql> create database e-commerce;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-commerce' at line 1
+mysql> create database e_commerce;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> use e_commerce;
+Database changed
+mysql> create table pelanggan (
+    -> id_pelanggan varchar(10) primary key not null,
+    -> nama varchar(50) not null,
+    -> alamat varchar(100) not null,
+    -> kota varchar(50) not null,
+    -> telepon varchar(15) unique);
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> create table produk (
+    -> id_produk varchar(10) primary key not null,
+    -> nama varchar(50) not null,
+    -> \c
+mysql> create table produk (
+    -> id_produk varchar(10) primary key not null,
+    -> nama_produk varchar(50) not null,
+    -> kategori varchar(30) not null,
+    -> harga decimal(10,2) not null,
+    -> stok int(5) not null);
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+
+mysql> select * from produk;
+Empty set (0.03 sec)
+
+mysql> desc produk;
++-------------+---------------+------+-----+---------+-------+
+| Field       | Type          | Null | Key | Default | Extra |
++-------------+---------------+------+-----+---------+-------+
+| id_produk   | varchar(10)   | NO   | PRI | NULL    |       |
+| nama_produk | varchar(50)   | NO   |     | NULL    |       |
+| kategori    | varchar(30)   | NO   |     | NULL    |       |
+| harga       | decimal(10,2) | NO   |     | NULL    |       |
+| stok        | int           | NO   |     | NULL    |       |
++-------------+---------------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+mysql> create table pesanan (
+    -> id_pesanan varchar(10) primary key not null,
+    -> id_pelanggan varchar(10) not null,
+    -> tgl_pesanan date not null,
+    -> foreign key (id_pelanggan) references pelanggan(id_pelanggan)
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> create table detail_pesanan (
+    -> id_detail varchar(10) primary key not null,
+    -> id_pesanan varchar(10) not null,
+    -> id_produk varchar(10) not null,
+    -> jumlah int(3) not null,
+    -> total_harga decimal(10,2) not null,
+    -> foreign key (id_pesanan) references pesanan(id_pesanan),
+    -> foreign key (id_produk) references produk(id_produk)
+    -> );
+Query OK, 0 rows affected, 1 warning (0.07 sec)
+
+mysql> INSERT INTO pelanggan (id_pelanggan, nama, alamat, kota, telepon) VALUES
+    -> ('CUST001', 'Budi Santoso', 'Jl. Merdeka No.1', 'Jakarta', '081234567890'),
+    -> ('CUST002', 'Siti Aisyah', 'Jl. Melati No.15', 'Bandung', '081298765432'),
+    -> ('CUST003', 'Dewi Lestari', 'Jl. Diponegoro No.20', 'Surabaya', '081377788899'),
+    -> ('CUST004', 'Joko Widodo', 'Jl. Sudirman No.5', 'Semarang', '081234123456'),
+    -> ('CUST005', 'Agus Salim', 'Jl. Ahmad Yani No.3', 'Medan', '082233445566'),
+    -> ('CUST006', 'Rina Kartika', 'Jl. Mawar No.10', 'Yogyakarta', '081345678901'),
+    -> ('CUST007', 'Doni Saputra', 'Jl. Anggrek No.8', 'Bandung', '081255667788'),
+    -> ('CUST008', 'Sari Handayani', 'Jl. Sakura No.12', 'Denpasar', '081244556677'),
+    -> ('CUST009', 'Andi Wijaya', 'Jl. Cemara No.6', 'Makassar', '081233344455'),
+    -> ('CUST010', 'Maya Sari', 'Jl. Cempaka No.9', 'Palembang', '081255778899');
+Query OK, 10 rows affected (0.01 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from pelanggan;
++--------------+----------------+----------------------+------------+--------------+
+| id_pelanggan | nama           | alamat               | kota       | telepon      |
++--------------+----------------+----------------------+------------+--------------+
+| CUST001      | Budi Santoso   | Jl. Merdeka No.1     | Jakarta    | 081234567890 |
+| CUST002      | Siti Aisyah    | Jl. Melati No.15     | Bandung    | 081298765432 |
+| CUST003      | Dewi Lestari   | Jl. Diponegoro No.20 | Surabaya   | 081377788899 |
+| CUST004      | Joko Widodo    | Jl. Sudirman No.5    | Semarang   | 081234123456 |
+| CUST005      | Agus Salim     | Jl. Ahmad Yani No.3  | Medan      | 082233445566 |
+| CUST006      | Rina Kartika   | Jl. Mawar No.10      | Yogyakarta | 081345678901 |
+| CUST007      | Doni Saputra   | Jl. Anggrek No.8     | Bandung    | 081255667788 |
+| CUST008      | Sari Handayani | Jl. Sakura No.12     | Denpasar   | 081244556677 |
+| CUST009      | Andi Wijaya    | Jl. Cemara No.6      | Makassar   | 081233344455 |
+| CUST010      | Maya Sari      | Jl. Cempaka No.9     | Palembang  | 081255778899 |
++--------------+----------------+----------------------+------------+--------------+
+10 rows in set (0.00 sec)
+
+mysql> INSERT INTO produk (id_produk, nama_produk, kategori, harga, stok) VALUES
+    -> ('PROD001', 'Laptop Asus', 'Elektronik', 7500000.00, 50),
+    -> ('PROD002', 'HP Samsung', 'Elektronik', 5000000.00, 40),
+    -> ('PROD003', 'Headphone Sony', 'Aksesoris', 1500000.00, 100),
+    -> ('PROD004', 'Printer Epson', 'Elektronik', 2000000.00, 30),
+    -> ('PROD005', 'Meja Kerja', 'Furniture', 1200000.00, 20),
+    -> ('PROD006', 'Kursi Gaming', 'Furniture', 2500000.00, 15),
+    -> ('PROD007', 'Router TP-Link', 'Networking', 500000.00, 60),
+    -> ('PROD008', 'Flashdisk Sandisk 32GB', 'Aksesoris', 150000.00, 200),
+    -> ('PROD009', 'Smartwatch Xiaomi', 'Wearable', 800000.00, 35),
+    -> ('PROD010', 'Powerbank Anker 20K', 'Aksesoris', 350000.00, 80);
+Query OK, 10 rows affected (0.04 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from produk;
++-----------+------------------------+------------+------------+------+
+| id_produk | nama_produk            | kategori   | harga      | stok |
++-----------+------------------------+------------+------------+------+
+| PROD001   | Laptop Asus            | Elektronik | 7500000.00 |   50 |
+| PROD002   | HP Samsung             | Elektronik | 5000000.00 |   40 |
+| PROD003   | Headphone Sony         | Aksesoris  | 1500000.00 |  100 |
+| PROD004   | Printer Epson          | Elektronik | 2000000.00 |   30 |
+| PROD005   | Meja Kerja             | Furniture  | 1200000.00 |   20 |
+| PROD006   | Kursi Gaming           | Furniture  | 2500000.00 |   15 |
+| PROD007   | Router TP-Link         | Networking |  500000.00 |   60 |
+| PROD008   | Flashdisk Sandisk 32GB | Aksesoris  |  150000.00 |  200 |
+| PROD009   | Smartwatch Xiaomi      | Wearable   |  800000.00 |   35 |
+| PROD010   | Powerbank Anker 20K    | Aksesoris  |  350000.00 |   80 |
++-----------+------------------------+------------+------------+------+
+10 rows in set (0.00 sec)
+
+mysql> INSERT INTO pesanan (id_pesanan, id_pelanggan, tgl_pesanan) VALUES
+    -> ('ORD001', 'CUST001', '2024-02-15'),
+    -> ('ORD002', 'CUST002', '2024-02-16'),
+    -> ('ORD003', 'CUST003', '2024-02-17'),
+    -> ('ORD004', 'CUST004', '2024-02-18'),
+    -> ('ORD005', 'CUST005', '2024-02-19'),
+    -> ('ORD006', 'CUST006', '2024-02-20'),
+    -> ('ORD007', 'CUST007', '2024-02-21'),
+    -> ('ORD008', 'CUST008', '2024-02-22'),
+    -> ('ORD009', 'CUST009', '2024-02-23'),
+    -> ('ORD010', 'CUST010', '2024-02-24');
+Query OK, 10 rows affected (0.03 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from pesanan
+    -> ;
++------------+--------------+-------------+
+| id_pesanan | id_pelanggan | tgl_pesanan |
++------------+--------------+-------------+
+| ORD001     | CUST001      | 2024-02-15  |
+| ORD002     | CUST002      | 2024-02-16  |
+| ORD003     | CUST003      | 2024-02-17  |
+| ORD004     | CUST004      | 2024-02-18  |
+| ORD005     | CUST005      | 2024-02-19  |
+| ORD006     | CUST006      | 2024-02-20  |
+| ORD007     | CUST007      | 2024-02-21  |
+| ORD008     | CUST008      | 2024-02-22  |
+| ORD009     | CUST009      | 2024-02-23  |
+| ORD010     | CUST010      | 2024-02-24  |
++------------+--------------+-------------+
+10 rows in set (0.00 sec)
+
+mysql> INSERT INTO detail_pesanan (id_detail, id_pesanan, id_produk, jumlah, total_harga) VALUES
+    -> ('DET001', 'ORD001', 'PROD001', 1, 7500000.00),
+    -> ('DET002', 'ORD002', 'PROD002', 2, 10000000.00),
+    -> ('DET003', 'ORD003', 'PROD003', 3, 4500000.00),
+    -> ('DET004', 'ORD004', 'PROD004', 1, 2000000.00),
+    -> ('DET005', 'ORD005', 'PROD005', 2, 2400000.00),
+    -> ('DET006', 'ORD006', 'PROD006', 1, 2500000.00),
+    -> ('DET007', 'ORD007', 'PROD007', 4, 2000000.00),
+    -> ('DET008', 'ORD008', 'PROD008', 5, 750000.00),
+    -> ('DET009', 'ORD009', 'PROD009', 2, 1600000.00),
+    -> ('DET010', 'ORD010', 'PROD010', 3, 1050000.00);
+Query OK, 10 rows affected (0.04 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select * from detail_pesanan;
++-----------+------------+-----------+--------+-------------+
+| id_detail | id_pesanan | id_produk | jumlah | total_harga |
++-----------+------------+-----------+--------+-------------+
+| DET001    | ORD001     | PROD001   |      1 |  7500000.00 |
+| DET002    | ORD002     | PROD002   |      2 | 10000000.00 |
+| DET003    | ORD003     | PROD003   |      3 |  4500000.00 |
+| DET004    | ORD004     | PROD004   |      1 |  2000000.00 |
+| DET005    | ORD005     | PROD005   |      2 |  2400000.00 |
+| DET006    | ORD006     | PROD006   |      1 |  2500000.00 |
+| DET007    | ORD007     | PROD007   |      4 |  2000000.00 |
+| DET008    | ORD008     | PROD008   |      5 |   750000.00 |
+| DET009    | ORD009     | PROD009   |      2 |  1600000.00 |
+| DET010    | ORD010     | PROD010   |      3 |  1050000.00 |
++-----------+------------+-----------+--------+-------------+
+10 rows in set (0.00 sec)
+
+mysql> 2A
+    -> select nama_produk from produk where kategori = 'Elektronik' and stok> (select 20);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '2A
+select nama_produk from produk where kategori = 'Elektronik' and stok> (selec' at line 1
+mysql> select nama_produk from produk where kategori = 'Elektronik' and stok > (select 20);
++---------------+
+| nama_produk   |
++---------------+
+| Laptop Asus   |
+| HP Samsung    |
+| Printer Epson |
++---------------+
+3 rows in set (0.00 sec)
+
+mysql> 2B
+    -> select nama_produk from produk where id_produk where id_produk not in (select distinct id_produk from detail
+    -> \c
+mysql> 2B
+    -> select nama_produk from produk where id_produk where id_produk not in (select distinct id_produk from detail_pesanan);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '2B
+select nama_produk from produk where id_produk where id_produk not in (select' at line 1
+mysql> select nama_produk from produk where id_produk where id_produk not in;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where id_produk not in' at line 1
+mysql> 2B
+    -> select nama_produk
+    -> from produk p
+    -> where not exists (
+    -> select 1 from detail_pesanan dp where dp.id_produk = p.id_produk);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '2B
+select nama_produk
+from produk p
+where not exists (
+select 1 from detail_pesa' at line 1
+mysql> SELECT nama_produk 
+    -> FROM produk 
+    -> WHERE id_produk NOT IN (SELECT DISTINCT id_produk FROM detail_pesanan);
+Empty set (0.00 sec)
+
+mysql>  select p.nama_produk, p.kategori,dp.jumlah,dp.total_harga
+    ->     -> from detail_pesanan dp
+    ->     -> join pesanan ps on dp.id_pesanan = ps.id_pesanan
+    ->     -> join produk p on dp.id_produk = p.id_produk
+    ->     -> join pelanggan pl on ps.id_pelanggan = pl.id_pelanggan
+    ->     -> where pl.nama in (select pl.nama from pelanggan p where pl.nama ="Budi Santoso");
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from detail_pesanan dp
+    -> join pesanan ps on dp.id_pesanan = ps.id_pesanan
+ ' at line 2
+mysql> SELECT p.nama_produk, p.kategori, dp.jumlah, dp.total_harga
+    -> FROM detail_pesanan dp
+    -> JOIN pesanan ps ON dp.id_pesanan = ps.id_pesanan
+    -> JOIN produk p ON dp.id_produk = p.id_produk
+    -> JOIN pelanggan pl ON ps.id_pelanggan = pl.id_pelanggan
+    -> WHERE pl.nama = "Budi Santoso";
++-------------+------------+--------+-------------+
+| nama_produk | kategori   | jumlah | total_harga |
++-------------+------------+--------+-------------+
+| Laptop Asus | Elektronik |      1 |  7500000.00 |
++-------------+------------+--------+-------------+
+1 row in set (0.00 sec)
+
+mysql> 2C atas
+    -> 2D bwah
+    -> SELECT id_pelanggan, nama, 
+    ->        (SELECT id_pesanan FROM pesanan WHERE pelanggan.id_pelanggan = pesanan.id_pelanggan AND tgl_pesanan = '2024-02-15') AS id_pesanan, 
+    ->        (SELECT tgl_pesanan FROM pesanan WHERE pelanggan.id_pelanggan = pesanan.id_pelanggan AND tgl_pesanan = '2024-02-15') AS tgl_pesanan
+    -> FROM pelanggan
+    -> WHERE id_pelanggan IN (SELECT id_pelanggan FROM pesanan WHERE tgl_pesanan = '2024-02-15');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '2C atas
+2D bwah
+SELECT id_pelanggan, nama, 
+       (SELECT id_pesanan FROM pesan' at line 1
+mysql> SELECT p.id_pelanggan, p.nama, ps.id_pesanan, ps.tgl_pesanan
+    -> FROM pelanggan p
+    -> JOIN pesanan ps ON p.id_pelanggan = ps.id_pelanggan
+    -> WHERE ps.tgl_pesanan = '2024-02-15';
++--------------+--------------+------------+-------------+
+| id_pelanggan | nama         | id_pesanan | tgl_pesanan |
++--------------+--------------+------------+-------------+
+| CUST001      | Budi Santoso | ORD001     | 2024-02-15  |
++--------------+--------------+------------+-------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT p.id_pelanggan, p.nama, pr.nama_produk, pr.kategori, ps.tgl_pesanan
+    -> FROM pelanggan p
+    -> JOIN pesanan ps ON p.id_pelanggan = ps.id_pelanggan
+    -> JOIN detail_pesanan dp ON ps.id_pesanan = dp.id_pesanan
+    -> JOIN produk pr ON dp.id_produk = pr.id_produk
+    -> WHERE pr.kategori = 'Aksesoris';
++--------------+----------------+------------------------+-----------+-------------+
+| id_pelanggan | nama           | nama_produk            | kategori  | tgl_pesanan |
++--------------+----------------+------------------------+-----------+-------------+
+| CUST003      | Dewi Lestari   | Headphone Sony         | Aksesoris | 2024-02-17  |
+| CUST008      | Sari Handayani | Flashdisk Sandisk 32GB | Aksesoris | 2024-02-22  |
+| CUST010      | Maya Sari      | Powerbank Anker 20K    | Aksesoris | 2024-02-24  |
++--------------+----------------+------------------------+-----------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> 
+mysql> Tampilkan nama produk, kategori, dan harga untuk produk yang tidak pernah dipesan 
+    -> oleh pelanggan.;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Tampilkan nama produk, kategori, dan harga untuk produk yang tidak pernah dipesa' at line 1
+mysql> 2E ATAS
+    -> 2F BAWH
+    -> SELECT nama_produk, kategori, harga
+    -> FROM produk
+    -> WHERE id_produk NOT IN (
+    ->     SELECT DISTINCT id_produk FROM detail_pesanan
+    -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '2E ATAS
+2F BAWH
+SELECT nama_produk, kategori, harga
+FROM produk
+WHERE id_produk ' at line 1
+mysql> SELECT nama_produk, kategori, harga
+    -> FROM produk
+    -> WHERE id_produk NOT IN (
+    ->     SELECT DISTINCT id_produk FROM detail_pesanan
+    -> );
+Empty set (0.00 sec)
+
+mysql> 3A
+    -> CREATE VIEW v_produk_terjual AS
+    -> SELECT 
+    ->     p.nama_produk, 
+    ->     SUM(dp.jumlah) AS total_terjual
+    -> FROM detail_pesanan dp
+    -> JOIN produk p ON dp.id_produk = p.id_produk
+    -> GROUP BY p.nama_produk;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '3A
+CREATE VIEW v_produk_terjual AS
+SELECT 
+    p.nama_produk, 
+    SUM(dp.jumlah' at line 1
+mysql> CREATE VIEW v_produk_terjual AS
+    -> SELECT 
+    ->     p.nama_produk, 
+    ->     SUM(dp.jumlah) AS total_terjual
+    -> FROM detail_pesanan dp
+    -> JOIN produk p ON dp.id_produk = p.id_produk
+    -> GROUP BY p.nama_produk;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> SELECT * FROM v_produk_terjual;
++------------------------+---------------+
+| nama_produk            | total_terjual |
++------------------------+---------------+
+| Laptop Asus            |             1 |
+| HP Samsung             |             2 |
+| Headphone Sony         |             3 |
+| Printer Epson          |             1 |
+| Meja Kerja             |             2 |
+| Kursi Gaming           |             1 |
+| Router TP-Link         |             4 |
+| Flashdisk Sandisk 32GB |             5 |
+| Smartwatch Xiaomi      |             2 |
+| Powerbank Anker 20K    |             3 |
++------------------------+---------------+
+10 rows in set (0.00 sec)
+
+mysql> CREATE VIEW v_transaksi_pelanggan AS
+    -> SELECT 
+    ->     pl.nama AS nama_pelanggan,
+    ->     ps.tgl_pesanan,
+    ->     SUM(dp.total_harga) AS total_harga_pesanan
+    -> FROM pesanan ps
+    -> JOIN pelanggan pl ON ps.id_pelanggan = pl.id_pelanggan
+    -> JOIN detail_pesanan dp ON ps.id_pesanan = dp.id_pesanan
+    -> GROUP BY pl.nama, ps.tgl_pesanan;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> 3B atas
+    -> SELECT * FROM v_transaksi_pelanggan;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '3B atas
+SELECT * FROM v_transaksi_pelanggan' at line 1
+mysql> SELECT * FROM v_transaksi_pelanggan;
++----------------+-------------+---------------------+
+| nama_pelanggan | tgl_pesanan | total_harga_pesanan |
++----------------+-------------+---------------------+
+| Budi Santoso   | 2024-02-15  |          7500000.00 |
+| Siti Aisyah    | 2024-02-16  |         10000000.00 |
+| Dewi Lestari   | 2024-02-17  |          4500000.00 |
+| Joko Widodo    | 2024-02-18  |          2000000.00 |
+| Agus Salim     | 2024-02-19  |          2400000.00 |
+| Rina Kartika   | 2024-02-20  |          2500000.00 |
+| Doni Saputra   | 2024-02-21  |          2000000.00 |
+| Sari Handayani | 2024-02-22  |           750000.00 |
+| Andi Wijaya    | 2024-02-23  |          1600000.00 |
+| Maya Sari      | 2024-02-24  |          1050000.00 |
++----------------+-------------+---------------------+
+10 rows in set (0.03 sec)
+
+mysql> 3C
+    -> CREATE VIEW v_jumlah_transaksi_kota AS
+    -> SELECT 
+    ->     pl.kota AS kota_pelanggan,
+    ->     COUNT(ps.id_pesanan) AS jumlah_transaksi
+    -> FROM pesanan ps
+    -> JOIN pelanggan pl ON ps.id_pelanggan = pl.id_pelanggan
+    -> GROUP BY pl.kota;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '3C
+CREATE VIEW v_jumlah_transaksi_kota AS
+SELECT 
+    pl.kota AS kota_pelanggan,' at line 1
+mysql> Terminal close -- exit!
